@@ -1,0 +1,1 @@
+sjaracne local -e output/CeNDR_age_corrected_vst_for_ARACNe.txt -g output/TFs_for_agecorr_vst_ARACNE.txt -n 100 -o output/SJARACNE/age_corrected_non_zero -pc 0.2 -pb 0.2 -tmp output/SJARACNe/tmp
