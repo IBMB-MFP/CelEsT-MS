@@ -7,6 +7,6 @@ I have done my best to ensure the code runs smooothly but as in the course of ma
 
 Any questions please raise an issue on this page.
 
-Note the basic CelEsT analyses are available in the CelEsT web app found at [URL HERE].
+Note several analyses with CelEsT are available via the CelEsT R Shiny app found at [github.com/IBMB-MFP/CelEsT-app].
 
 Thanks for your interest in CelEsT!
