@@ -15,7 +15,7 @@ options(scipen = 10000)
 
 # here create new folder and set working directory within it
 
-setwd("~/Cel_GRN_manuscript/")
+setwd("~/Cel_GRN_revisions/")
 
 dir.create("input")
 dir.create("output")
@@ -354,6 +354,21 @@ write.table(t_values,
             sep = "\t",
             row.names = TRUE,
             col.names = TRUE)
+
+
+# compare new stats (hisat2 alignment) to previous DE stats from bowtie2 alignment
+befre_stats <- read.table("~/Cel_GRN_manuscript/output/HS_DEstats_RAW.txt",
+                          header = TRUE)
+
+
+sapply(1:7, function(i){
+  
+  cor.test(unlist(t_values[, i]), unlist(befre_stats[, i]))$estimate
+  
+  
+})
+
+# all > 0.95 cor, 6/7 > 0.98
 
 #### AGE CORRECTION WITH RAPToR ####
 

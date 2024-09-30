@@ -15,7 +15,7 @@ options(scipen = 10000)
 
 # here create new folder and set working directory within it
 
-setwd("~/Cel_GRN_manuscript/")
+setwd("~/Cel_GRN_revisions/")
 
 dir.create("input")
 dir.create("output")
@@ -316,8 +316,9 @@ row.names(counts_mat) <- counts_list[[1]]$Geneid
 
 #### RAW DE STATISTICS ####
 
+# allstudiesDE <- apply(all_SRA[nrow(all_SRA), ], 1, function(thisstudy){
 allstudiesDE <- apply(all_SRA, 1, function(thisstudy){
-  
+    
   ## For DEBUGGING
   # thisstudy <- unlist(all_SRA[2, ])
   
@@ -401,7 +402,7 @@ names(refdata_list) <- ref_vec
 
 #### FOR THIS TO WORK NEED TO PUT dev_stage IN SRA FILES
 
-allstudiesDE_RAPToR <- apply(all_SRA, 1, function(thisstudy){
+allstudiesDE_RAPToR <- apply(all_SRA[nrow(all_SRA), ], 1, function(thisstudy){
   
   ## FOR DEBUGGING
   # thisstudy <- unlist(all_SRA[19, ])
@@ -607,16 +608,14 @@ names(allstudiesDE_RAPToR) <- paste0(all_SRA$Accession, all_SRA$genotype)
 
 # allstudiesDE_RAPToR <- allstudiesDE_RAPToR[!sapply(allstudiesDE_RAPToR, is.null)]
 
-allstudiesDE_stats <- lapply(allstudiesDE_RAPToR, function(x){
-  
+allstudiesDE_stats <- lapply(allstudiesDE_RAPToR[1:(length(allstudiesDE_RAPToR)-1)], function(x){
+
   tempout <- as.data.frame(x)[, "stat"]
   names(tempout) <- row.names(as.data.frame(x))
   
   tempout
   
 })
-
-allgenesthereDE_new <- unique(unlist(lapply(allstudiesDE_stats, names)))
 
 allstudiesDE_RAPToR_df <- data.frame(lapply(allstudiesDE_stats, function(x){
   

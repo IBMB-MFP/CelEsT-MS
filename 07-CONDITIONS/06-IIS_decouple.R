@@ -10,8 +10,8 @@ options(scipen=10000)
 
 # here create new folder and set working directory within it
 
-dir.create("~/Cel_GRN_manuscript")
-setwd("~/Cel_GRN_manuscript")
+dir.create("~/Cel_GRN_revisions")
+setwd("~/Cel_GRN_revisions")
 
 # create subfolders for input, output and graphics
 
@@ -33,7 +33,8 @@ packages <- c("dplyr",
               "openxlsx",
               "ggrepel",
               "gplots",
-              "Hmisc")
+              "Hmisc",
+              "tidyr")
 
 ## Now load or install&load all
 package.check <- lapply(
@@ -220,21 +221,14 @@ allstudiesDE_RAPToR_df <- read.table("output/IIS_DE_RAPToR.txt",
             header = TRUE)
 
 fullset_TFs_BM <- readRDS("output/fullset_TFs_BM.rds")
+# fullset_TFs_BM <- readRDS("~/Cel_GRN_manuscript/output/fullset_TFs_BM.rds")
+
 fullset_TFs_BM[, "label"] <- fullset_TFs_BM$wormbase_locus
 fullset_TFs_BM[fullset_TFs_BM$label == "", "label"] <- fullset_TFs_BM[fullset_TFs_BM$label == "", "wormbase_gseq"]
 
 CelEsT <- read.table("output/GRNs/allthree_equalweights.txt",
                      sep = "\t",
                      header = TRUE)
-
-orthCelEsT <- read.table("output/GRNs/orthCelEsT_equalweights.txt",
-                         sep = "\t",
-                         header = TRUE)
-
-maxCelEsT <- read.table("output/GRNs/orthCelEsTMAXcov_equalweights.txt",
-                        sep = "\t",
-                        header = TRUE)
-
 
 #### DAF2 ####
 
@@ -245,6 +239,7 @@ decouplelist <- lapply(genotypelist[c(1, 3:4)], function(x){print(x)
 names(decouplelist) <- genotypelist[c(1, 3:4)]
 
 decouplelist2 <- lapply(genotypelist[c(2, 5)], function(x){print(x)
+
   meta.analysis.decouple(allstudiesDE_RAPToR_df[, str_remove(colnames(allstudiesDE_RAPToR_df), "GSE[0-9]+") == x, drop = FALSE])})
 names(decouplelist2) <- genotypelist[c(2, 5)]
 
@@ -264,14 +259,15 @@ heatmap.2(as.matrix(decouplelist[["daf2"]][["decouple_z"]]),
 
 dev.off()
 
-# exclude "GSE36041daf2"
-
 rcorr(as.matrix(decouplelist[["daf2"]][["decouple_z"]]))
 rowMeans(rcorr(as.matrix(decouplelist[["daf2"]][["decouple_z"]]))[[1]])
 
-daf2_forbubbleplot <- data.frame(mean_z = rowMeans(decouplelist[["daf2"]][["decouple_z"]][, colnames(decouplelist[["daf2"]][["decouple_z"]]) != "GSE36041daf2"]),
-           p_val = -log10(apply(decouplelist[["daf2"]][["decouple_p"]][, colnames(decouplelist[["daf2"]][["decouple_z"]]) != "GSE36041daf2"], 1, gm_mean)),
-           label = toupper(fullset_TFs_BM[match(row.names(decouplelist[["daf2"]][["decouple_p"]][, colnames(decouplelist[["daf2"]][["decouple_z"]]) != "GSE36041daf2"]), fullset_TFs_BM$wormbase_gseq), "label"]))
+# exclude "GSE36041daf2"
+daf2_sample_exclude <- c("GSE36041daf2")
+
+daf2_forbubbleplot <- data.frame(mean_z = rowMeans(decouplelist[["daf2"]][["decouple_z"]][, !colnames(decouplelist[["daf2"]][["decouple_z"]]) %in% daf2_sample_exclude]),
+           p_val = -log10(apply(decouplelist[["daf2"]][["decouple_p"]][, !colnames(decouplelist[["daf2"]][["decouple_z"]]) %in% daf2_sample_exclude], 1, gm_mean)),
+           label = toupper(fullset_TFs_BM[match(row.names(decouplelist[["daf2"]][["decouple_p"]][, !colnames(decouplelist[["daf2"]][["decouple_z"]]) %in% daf2_sample_exclude]), fullset_TFs_BM$wormbase_gseq), "label"]))
 
 daf2_forbubbleplot[abs(daf2_forbubbleplot$p_val) < 3.5, "label"] <- ""
 
@@ -296,13 +292,14 @@ ggplot(aes(x = mean_z, y = p_val, size = 2^p_val, label = label), data = daf2_fo
         axis.title.x = element_text(size = 10),
         axis.title.y = element_text(size = 10)) + 
   ylab(substitute("-log"[10]~"(mean p-value)")) + 
-  xlab("TF activity (mean z-score)")
+  xlab("TF activity (mean z-score)") + 
+  coord_cartesian(xlim = c(-3, 7.75),
+                  ylim = c(0, 25))
 
 dev.off()
 
-
-daf2_DE_vs_activity_plot <- data.frame("DE" = rowMeans(decouplelist[["daf2"]][["DE_z"]][, colnames(decouplelist[["daf2"]][["DE_z"]]) != "GSE36041daf2"])[row.names(decouplelist[["daf2"]][["decouple_z"]])],
-                                     "act" = rowMeans(decouplelist[["daf2"]][["decouple_z"]][, colnames(decouplelist[["daf2"]][["decouple_z"]]) != "GSE36041daf2"]),
+daf2_DE_vs_activity_plot <- data.frame("DE" = rowMeans(decouplelist[["daf2"]][["DE_z"]][, !colnames(decouplelist[["daf2"]][["DE_z"]]) %in% daf2_sample_exclude])[row.names(decouplelist[["daf2"]][["decouple_z"]])],
+                                     "act" = rowMeans(decouplelist[["daf2"]][["decouple_z"]][, !colnames(decouplelist[["daf2"]][["DE_z"]]) %in% daf2_sample_exclude]),
                                      "label" = fullset_TFs_BM[match(row.names(decouplelist[["daf2"]][["decouple_z"]]), fullset_TFs_BM$wormbase_gseq), "label"])
 
 daf2_DE_vs_activity_plot <- daf2_DE_vs_activity_plot[!is.na(daf2_DE_vs_activity_plot$DE), ]
@@ -365,13 +362,15 @@ daf2daf16_forbubbleplot <- data.frame(mean_z = rowMeans(decouplelist[["daf2daf16
 
 daf2daf16_forbubbleplot[abs(daf2daf16_forbubbleplot$p_val) < 5, "label"] <- ""
 
+# mark NHR-28
+daf2daf16_forbubbleplot["C11G6.4", "label"] <- "NHR-28"
+
 saveRDS(daf2daf16_forbubbleplot,
         "plotdata/daf2daf16_forbubbleplot.rds")
 
 # daf2daf16_forbubbleplot <- readRDS("plotdata/daf2daf16_forbubbleplot.rds")
 
 daf2daf16colours_for_plot <- map2color(daf2daf16_forbubbleplot$p_val, pal = colorRampPalette(c("grey", "grey", "grey", "red", "red", "red"))(100))
-
 
 pdf("graphics/daf2daf16_bubbleplot.pdf",
     height = 2.5,
@@ -392,8 +391,8 @@ ggplot(aes(x = mean_z, y = p_val, size = 2^p_val, label = label), data = daf2daf
 
 dev.off()
 
-daf2daf16_DE_vs_activity_plot <- data.frame("DE" = rowMeans(decouplelist[["daf2daf16"]][["DE_z"]][, colnames(decouplelist[["daf2daf16"]][["DE_z"]]) != "GSE36041daf2daf16"])[row.names(decouplelist[["daf2daf16"]][["decouple_z"]])],
-                                       "act" = rowMeans(decouplelist[["daf2daf16"]][["decouple_z"]][, colnames(decouplelist[["daf2daf16"]][["decouple_z"]]) != "GSE36041daf2daf16"]),
+daf2daf16_DE_vs_activity_plot <- data.frame("DE" = rowMeans(decouplelist[["daf2daf16"]][["DE_z"]])[row.names(decouplelist[["daf2daf16"]][["decouple_z"]])],
+                                       "act" = rowMeans(decouplelist[["daf2daf16"]][["decouple_z"]]),
                                        "label" = fullset_TFs_BM[match(row.names(decouplelist[["daf2daf16"]][["decouple_z"]]), fullset_TFs_BM$wormbase_gseq), "label"])
 
 daf2daf16_DE_vs_activity_plot <- daf2daf16_DE_vs_activity_plot[!is.na(daf2daf16_DE_vs_activity_plot$DE), ]
@@ -447,16 +446,22 @@ heatmap.2(as.matrix(decouplelist[["daf16"]][["decouple_z"]]),
 
 dev.off()
 
-daf16_forbubbleplot <- data.frame(mean_z = rowMeans(decouplelist[["daf16"]][["decouple_z"]][colnames(decouplelist[["daf16"]][["decouple_z"]]) %in% c("GSE240821daf16", "GSE108848daf16")]),
-                                 p_val = -log10(apply(decouplelist[["daf16"]][["decouple_p"]][colnames(decouplelist[["daf16"]][["decouple_z"]]) %in% c("GSE240821daf16", "GSE108848daf16")], 1, gm_mean)),
-                                 label = toupper(fullset_TFs_BM[match(row.names(decouplelist[["daf16"]][["decouple_p"]][colnames(decouplelist[["daf16"]][["decouple_z"]]) %in% c("GSE240821daf16", "GSE108848daf16")]), fullset_TFs_BM$wormbase_gseq), "label"]))
+rcorr(as.matrix(decouplelist[["daf16"]][["decouple_z"]]))
+rowMeans(rcorr(as.matrix(decouplelist[["daf16"]][["decouple_z"]]))[[1]])
 
-daf16_forbubbleplot[abs(daf16_forbubbleplot$p_val) < 3, "label"] <- ""
+daf16_sampleexclude <- c("GSE240821daf16", "GSE108848daf16")
+
+daf16_forbubbleplot <- data.frame(mean_z = rowMeans(decouplelist[["daf16"]][["decouple_z"]][colnames(decouplelist[["daf16"]][["decouple_z"]]) %in% daf16_sampleexclude]),
+                                 p_val = -log10(apply(decouplelist[["daf16"]][["decouple_p"]][colnames(decouplelist[["daf16"]][["decouple_z"]]) %in% daf16_sampleexclude], 1, gm_mean)),
+                                 label = toupper(fullset_TFs_BM[match(row.names(decouplelist[["daf16"]][["decouple_p"]][colnames(decouplelist[["daf16"]][["decouple_z"]]) %in% daf16_sampleexclude]), fullset_TFs_BM$wormbase_gseq), "label"]))
+
+daf16_forbubbleplot[abs(daf16_forbubbleplot$p_val) < 4.5, "label"] <- ""
+daf16_forbubbleplot[abs(daf16_forbubbleplot$mean_z) < 1, "label"] <- ""
 
 saveRDS(daf16_forbubbleplot,
         "plotdata/daf16_forbubbleplot.rds")
 
-daf16_forbubbleplot <- readRDS("plotdata/daf16_forbubbleplot.rds")
+# daf16_forbubbleplot <- readRDS("plotdata/daf16_forbubbleplot.rds")
 
 daf16colours_for_plot <- map2color(daf16_forbubbleplot$p_val, pal = colorRampPalette(c("grey", "grey", "grey", "red", "red", "red"))(100))
 
@@ -520,7 +525,7 @@ daf2daf18_forbubbleplot <- data.frame(mean_z = decouplelist2[["daf2daf18"]][["de
                                   p_val = -log10(decouplelist2[["daf2daf18"]][["decouple_p"]][[1]]),
                                   label = toupper(fullset_TFs_BM[match(row.names(decouplelist[["daf16"]][["decouple_p"]]), fullset_TFs_BM$wormbase_gseq), "label"]))
 
-daf2daf18_forbubbleplot[abs(daf2daf18_forbubbleplot$p_val) < 3, "label"] <- ""
+daf2daf18_forbubbleplot[abs(daf2daf18_forbubbleplot$p_val) < 4, "label"] <- ""
 
 saveRDS(daf2daf18_forbubbleplot,
         "plotdata/daf2daf18_forbubbleplot.rds")
