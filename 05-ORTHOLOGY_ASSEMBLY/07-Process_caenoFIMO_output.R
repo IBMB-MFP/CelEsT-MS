@@ -443,7 +443,7 @@ caeno_calc_score_list <- lapply(caeno_sp_by_motif, function(thisFIMO_list){
 names(caeno_calc_score_list) <- names(caeno_sp_by_motif)
 
 saveRDS(caeno_calc_score_list, "output/caeno_calc_score_list.rds")
-# caeno_calc_score_list <- readRDS("output/caeno_calc_score_list.rds")
+# caeno_calc_score_list <- readRDS("~/Cel_GRN_manuscript/output/caeno_calc_score_list.rds")
 
 #### BUILD ARRAY OF TARGETS ####
 
@@ -578,10 +578,10 @@ TF_orthology_probs <- lapply(dimnames(caeno_target_array)[[2]], function(thisTFn
 
 names(TF_orthology_probs) <- dimnames(caeno_target_array)[[2]]
 saveRDS(TF_orthology_probs, "output/TF_orthology_probs10k.rds")
-# TF_orthology_probs <- readRDS("output/TF_orthology_probs10k.rds")
+# TF_orthology_probs <- readRDS("~/Cel_GRN_manuscript/output/TF_orthology_probs10k.rds")
 
 cutoffs_vec <- c(500, 1000, 1500, 2000, 2500, 3000, 5000, 10000)
-fdrvec <- c(0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8)
+fdrvec <- c(0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
 
 for(i in 1:length(cutoffs_vec)){
   
@@ -646,10 +646,10 @@ sum(unlist(distributions_adj) < 0.2, na.rm = TRUE)
 
 # 153/210 TFs present in at least 5 of the species have significant enrichment of overlapping targets.
 
-#### make unfiltered 1500/fdr0.2 net for combination ####
+#### make unfiltered 1500/fdr0.8 net for combination ####
 
 make.TF.orth.GRN(cutoff = 1500,
-                 fdrcut = 0.5,
+                 fdrcut = 0.8,
                  TF_orthology_prob_list = TF_orthology_probs,
                  elegans_targets = elegans_target_table,
                  mintargets = 0,
