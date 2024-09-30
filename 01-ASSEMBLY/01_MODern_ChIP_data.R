@@ -305,9 +305,53 @@ allChIP_agg <- rbind(MODern_agg[, 1:10],
                      lit_chips_aggregated
                      )
 
-# here is previously processed RNA-seq data from CeNDR, MRN normalised and with transcript counts collapsed to gene level counts
-# code for processing can be found in manuscript 'Histone methylation has a direct metabolic role in human cells'
-CeNDR_normalised_counts_collapse <- readRDS("output/Cel_CeNDR_normalised_counts_gene_level.rds")
+# import and convert CeNDR raw RNA-seq counts into MRN pseudocounts 
+
+# file downloaded from supplementary of GEO Accession GSE186719
+CeNDR_raw_counts <- read.table(file = "input/GSE186719_Celegans_208strains_609samples_rawCounts.tsv",
+                               sep = "\t",
+                               fill = TRUE,
+                               quote = "",
+                               header = TRUE)
+
+# DESeq2 wants a colData object. Not actually used for the normalisation. Here we can use the sample IDs with tissue.
+CeNDR_col_data <- str_extract(colnames(CeNDR_raw_counts)[2:ncol(CeNDR_raw_counts)], "^[0-9A-Z]+")
+CeNDR_col_data <- as.matrix(CeNDR_col_data)
+
+rownames(CeNDR_col_data) <- colnames(CeNDR_raw_counts)[2:ncol(CeNDR_raw_counts)]
+colnames(CeNDR_col_data) <- c("Strain")
+
+# convert to matrix of integers
+CeNDR_raw_counts_mat <- as.matrix(CeNDR_raw_counts[, 2:ncol(CeNDR_raw_counts)])
+colnames(CeNDR_raw_counts_mat) <- colnames(CeNDR_raw_counts)[2:ncol(CeNDR_raw_counts)]
+
+CeNDR_raw_counts_mat <- apply(CeNDR_raw_counts_mat, 2, as.integer)
+row.names(CeNDR_raw_counts_mat) <- CeNDR_raw_counts[, 1]
+
+# need to create a DESeq2 object. Design set to ~1 allows for use of estimateSizeFactors
+tempdds <- DESeqDataSetFromMatrix(countData = CeNDR_raw_counts_mat, colData = CeNDR_col_data, design = ~ 1)
+
+# this function estimates the scaling factors from the samples from the median of ratios wrt to the geometric mean for each gene across samples
+tempdds <- estimateSizeFactors(tempdds)
+
+# put the counts normalised by the scaling factors in a new object
+CeNDR_normalised_counts <- counts(tempdds, normalized = TRUE)
+
+row.names(CeNDR_normalised_counts) <- row.names(CeNDR_raw_counts_mat)
+
+Cel_genes_extract <- str_extract(row.names(CeNDR_normalised_counts), "^[0-9A-Z]+\\.[0-9]{1,2}")
+
+Cel_CeNDR_normalised_counts <- data.frame(CeNDR_normalised_counts)
+Cel_CeNDR_normalised_counts[, "gene"] <- str_extract(row.names(Cel_CeNDR_normalised_counts), "^[0-9A-Z]+\\.[0-9]{1,2}")
+
+# collapse to gene level by summing transcript counts
+CeNDR_normalised_counts_collapse <- aggregate(. ~ gene, data = Cel_CeNDR_normalised_counts, FUN = sum)
+
+row.names(CeNDR_normalised_counts_collapse) <- CeNDR_normalised_counts_collapse$gene
+CeNDR_normalised_counts_collapse <- CeNDR_normalised_counts_collapse[, 2:ncol(CeNDR_normalised_counts_collapse)]
+
+# remove genes which are not expressed in any sample
+CeNDR_normalised_counts_collapse <- CeNDR_normalised_counts_collapse[apply(CeNDR_normalised_counts_collapse, 1, function(x){any(x != 0)}), ]
 
 # filter for genes which are detected as expressed in at least 401 samples (of 609)
 CeNDR_normalised_counts_collapse_mostlyexpressed <- CeNDR_normalised_counts_collapse[apply(CeNDR_normalised_counts_collapse, 1, function(x){sum(x > 0) > 400}), ] 
