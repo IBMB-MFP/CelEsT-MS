@@ -15,7 +15,7 @@ options(scipen = 10000)
 
 # here create new folder and set working directory within it
 
-setwd("~/Cel_GRN_manuscript/")
+setwd("~/Cel_GRN_revisions/")
 
 dir.create("input")
 dir.create("output")
@@ -259,7 +259,7 @@ gh_package.check <- lapply(
 
 parasite_mart <- useMart("parasite_mart", dataset = "wbps_gene", host = "https://parasite.wormbase.org", port = 443)
 
-benchmark_SRA <- read.table("input/benchmark_SRA_all.txt",
+benchmark_SRA <- read.table("~/Cel_GRN_manuscript/input/benchmark_SRA_all.txt",
                             header = TRUE,
                             sep = "\t")
 
@@ -277,6 +277,8 @@ benchmark_SRA[, "ExperimentNo"] <- paste0("Experiment", sprintf("%02d", 1:nrow(b
 #### PREPARE COUNTS FOR BENCHMARK SET (SRA EXPERIMENTS) ####
 
 FCfilelist <- list.files("input/benchmark_counts/")
+
+FCfilelist <- FCfilelist[!str_detect(FCfilelist, "summary")]
 
 counts_list <- lapply(FCfilelist, function(x){
   
@@ -361,9 +363,8 @@ OEexperiments <- observations[observations$mode == "overexpression", "Experiment
 t_values_OE <- t_values_t
 t_values_OE[OEexperiments, ] <- -(t_values_OE[OEexperiments, ])
 
-# t_values_OE[is.na(t_values_OE)] <- 0
-t_values_OE[is.na(t_values_OE)] <- NaN
-
+t_values_OE[is.na(t_values_OE)] <- 0
+# t_values_OE[is.na(t_values_OE)] <- NaN
 
 write.table(t_values_OE,
             "output/benchmark_DEstats_RAW.txt",
@@ -396,10 +397,6 @@ length(unlist(str_split(str_remove_all(observations_for_TS1$treatment_samples, "
 # 301 controls
 # 296 treatment
 # 597 total
-
-
-
-
 
 #### AGE CORRECTION WITH RAPToR ####
 
