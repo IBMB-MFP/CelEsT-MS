@@ -33,7 +33,8 @@ dir.create("graphics")
 ## First specify the packages of interest
 
 packages <- c("stringr",
-              "UniprotR")
+              "UniprotR",
+              "openxlsx")
 
 ## Now load or install&load all
 package.check <- lapply(
@@ -107,6 +108,27 @@ gh_package.check <- lapply(
 
 fullset_TFs_BM <- readRDS("output/fullset_TFs_BM.rds")
 
+wTF3 <- read.xlsx("input/WTF3.xlsx")
+
+wTF3[, "family"] <- str_remove(wTF3$DBD, " - [0-9]{1,2} finger.*")
+wTF3[, "family"] <- str_remove(wTF3$family, " - [0-9]{1,2} domain.*")
+
+wTF3[, "family"] <- str_remove(wTF3$family, " x[0-9]{1}$")
+
+wTF3[, "family"] <- str_remove(wTF3$family, " $")
+
+wTF3[str_detect(wTF3$DBD, "^WH"), "family"] <- "WH"
+
+wTF3[str_detect(wTF3$DBD, "^AT Hook"), "family"] <- "AT Hook"
+
+wTF3[str_detect(wTF3$DBD, "^HD"), "family"] <- "HD"
+
+wTF3[str_detect(wTF3$DBD, "^ZF C2H2"), "family"] <- "ZF - C2H2"
+
+main_families <- names(table(wTF3$family)[order(table(wTF3$family), decreasing = TRUE)])[1:9]
+
+wTF3[!wTF3$family %in% main_families, "family"] <- "Other"
+
 # Wormbase descriptions
 
 download.file(url = "https://downloads.wormbase.org/releases/WS288/species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS288.functional_descriptions.txt.gz",
@@ -177,6 +199,9 @@ fullset_TFs_BM[, 'Uniprot_mode_of_regulation'] <- NA
 fullset_TFs_BM[fullset_TFs_BM$uniprot_swissprot_accession %in% PF_reviewed[PF_reviewed$manual_activity == 1, "UNIPROT"], 'Uniprot_mode_of_regulation'] <- 1
 fullset_TFs_BM[fullset_TFs_BM$uniprot_swissprot_accession %in% PF_reviewed[PF_reviewed$manual_activity == 0, "UNIPROT"], 'Uniprot_mode_of_regulation'] <- 0
 fullset_TFs_BM[fullset_TFs_BM$uniprot_swissprot_accession %in% PF_reviewed[PF_reviewed$manual_activity == -1, "UNIPROT"], 'Uniprot_mode_of_regulation'] <- -1
+
+fullset_TFs_BM[, "DNA_binding_domain"] <- wTF3[match(fullset_TFs_BM$wormbase_gseq, wTF3$Sequence.name), "DBD"]
+fullset_TFs_BM[, "Family_for_FigS4"] <- wTF3[match(fullset_TFs_BM$wormbase_gseq, wTF3$Sequence.name), "family"]
 
 write.xlsx(fullset_TFs_BM,
            "output/fullset_TFs_BM_with_MOR_for_TS2.xlsx")

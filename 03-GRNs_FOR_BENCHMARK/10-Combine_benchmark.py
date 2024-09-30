@@ -17,7 +17,7 @@ from pathlib import Path
 
 home_directory = os.path.expanduser("~")
 
-working_directory = os.path.join(home_directory, "Cel_GRN_manuscript")
+working_directory = os.path.join(home_directory, "Cel_GRN_revisions")
 
 os.chdir(working_directory)
 
@@ -41,7 +41,7 @@ obs1 = pd.read_csv("output/benchmark_observations.txt",
                      index_col=0,
                      encoding='unicode_escape')
 #%%
-obs2 = pd.read_csv("output/FIMO1500ChIPnocutexcl_observations.txt",
+obs2 = pd.read_csv("output/FIMO1000ChIPnocutexcl_observations.txt",
                   sep = '\t',
                      index_col=0,
                      encoding='unicode_escape')
@@ -50,15 +50,15 @@ obs2 = pd.read_csv("output/FIMO1500ChIPnocutexcl_observations.txt",
     
 combo_GRN_dict = {}
 
-combo_GRN_dict["FIMO1500"] = pd.read_table("output/GRNs/FIMO_nohomo_1500.txt")  
-combo_GRN_dict["ChIPnocut"] = pd.read_table("output/GRNs/allChIP_10000_HOTexcl.txt")
-combo_GRN_dict["FIMO1500ChIPnocut_noweights"] = pd.read_table("output/GRNs/FIMO1500ChIPnocutexcl_noweights.txt")
-combo_GRN_dict["FIMO1500ChIPnocut_weighted"] = pd.read_table("output/GRNs/FIMO1500ChIPnocutexcl_weighted.txt")
+combo_GRN_dict["FIMO1000"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/FIMO_nohomo_1000.txt")  
+combo_GRN_dict["ChIPnocut"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTexcl.txt")
+combo_GRN_dict["FIMO1000ChIPnocut_noweights"] = pd.read_table("output/GRNs/FIMO1000ChIPnocutexcl_noweights.txt")
+combo_GRN_dict["FIMO1000ChIPnocut_weighted"] = pd.read_table("output/GRNs/FIMO1000ChIPnocutexcl_weighted.txt")
 # combo_GRN_dict["FIMO1500ChIPnocut_weighted_unequal"] = pd.read_table("output/GRNs/FIMO1500ChIPnocutexcl_weighted_unequal.txt")
 
 combo_GRN_kws = {
     
-    "FIMO1500":{
+    "FIMO1000":{
         'methods' : ['mlm', 'ulm', 'wsum'],
         'consensus' : True,
         # 'dense' : True
@@ -68,17 +68,17 @@ combo_GRN_kws = {
         'consensus' : True,
         # 'dense' : True
         },
-    "FIMO1500ChIPnocut_noweights":{
+    "FIMO1000ChIPnocut_noweights":{
         'methods' : ['mlm', 'ulm', 'wsum'],
         'consensus' : True,
         # 'dense' : True
         },
-    "FIMO1500ChIPnocut_weighted":{
+    "FIMO1000ChIPnocut_weighted":{
         'methods' : ['mlm', 'ulm', 'wsum'],
         'consensus' : True,
         # 'dense' : True
         },
-    # "FIMO1500ChIPnocut_weighted_unequal":{
+    # "FIMO1000ChIPnocut_weighted_unequal":{
     #     'methods' : ['mlm', 'ulm', 'wsum'],
     #     'consensus' : True,
     #     # 'dense' : True
@@ -106,7 +106,7 @@ combo3_GRN_dict = {}
 
 combo3_GRN_dict["combo3equal"] = pd.read_table("output/GRNs/allthree_equalweights.txt")
 combo3_GRN_dict["combo3no"] = pd.read_table("output/GRNs/allthree_noweights.txt")
-combo3_GRN_dict["combo3_unequal"] = pd.read_table("output/GRNs/allthree_weighted_unequal.txt")
+# combo3_GRN_dict["combo3_unequal"] = pd.read_table("output/GRNs/allthree_weighted_unequal.txt")
 # combo3_GRN_dict["combo3_FIMOless"] = pd.read_table("output/GRNs/allthree_fimolessweight.txt")
 # combo3_GRN_dict["combo3_chipmore"] = pd.read_table("output/GRNs/allthreeChIP2000_chipmoreweight.txt")
 

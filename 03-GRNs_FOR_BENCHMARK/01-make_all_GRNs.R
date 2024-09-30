@@ -433,6 +433,7 @@ FIMO_nohomo_calcs <- calc.score.by.motif(motif_list = separate_by_motif,
 
 saveRDS(FIMO_nohomo_calcs,
         "output/FIMO_nohomo_calcs.rds")
+# FIMO_nohomo_calcs <- readRDS("output/FIMO_nohomo_calcs.rds")
 
 FIMO_homo_list <- lapply(c(1, 3, 5, 7), function(x){calc.score.by.motif(returns_parameter = x)})
 names(FIMO_homo_list) <- c(paste0("param", c(1, 3, 5, 7)))
@@ -450,7 +451,7 @@ FIMOduplicated_TFs <- CisBP_TFinfo_withmotif[CisBP_TFinfo_withmotif$wormbase_gse
 for(i in 1:length(cutoffs_vec)){
   
   message(paste0("Now doing cutoff ", cutoffs_vec[i]))
-  
+
   temp_calcscore_GRN <- reshape2::melt(lapply(FIMO_nohomo_calcs, function(x){names(x)[1:min(cutoffs_vec[i], length(x))]}))
   colnames(temp_calcscore_GRN) <- c("target", "source")
   temp_calcscore_GRN[, "weight"] <- 1
@@ -461,9 +462,9 @@ for(i in 1:length(cutoffs_vec)){
                                   .source = "source",
                                   .target = "target",
                                   .mor = "weight")
-  
+
   colinear_TFs <- colinearity_check[colinearity_check$correlation > 0.99, c("source", "source.2")]
-  
+
   if(any(unlist(colinear_TFs) %in% observations$target_gseq)){
     
     exclude = apply(colinear_TFs, 1, function(z){
@@ -502,14 +503,14 @@ for(i in 1:length(cutoffs_vec)){
   
 }
 
-# for cutoff 1500 (final choice) output unfiltered GRN (solely for combination with other)
+# for cutoff 1000 (final choice) output unfiltered GRN (solely for combination with other)
 
-unfilt1500_calcscore_GRN <- reshape2::melt(lapply(FIMO_nohomo_calcs, function(x){names(x)[1:min(1500, length(x))]}))
-colnames(unfilt1500_calcscore_GRN) <- c("target", "source")
-unfilt1500_calcscore_GRN[, "weight"] <- 1
+unfilt1000_calcscore_GRN <- reshape2::melt(lapply(FIMO_nohomo_calcs, function(x){names(x)[1:min(1000, length(x))]}))
+colnames(unfilt1000_calcscore_GRN) <- c("target", "source")
+unfilt1000_calcscore_GRN[, "weight"] <- 1
 
-write.table(unfilt1500_calcscore_GRN,
-            file = "output/GRNs/FIMO_nohomo_1500_unfiltered.txt",
+write.table(unfilt1000_calcscore_GRN,
+            file = "output/GRNs/FIMO_nohomo_1000_unfiltered.txt",
             sep = "\t",
             col.names = TRUE,
             row.names = FALSE)

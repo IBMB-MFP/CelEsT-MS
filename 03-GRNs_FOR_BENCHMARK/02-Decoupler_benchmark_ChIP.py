@@ -18,7 +18,7 @@ from pathlib import Path
 
 home_directory = os.path.expanduser("~")
 
-working_directory = os.path.join(home_directory, "Cel_GRN_manuscript")
+working_directory = os.path.join(home_directory, "Cel_GRN_revisions")
 
 os.chdir(working_directory)
 
@@ -46,35 +46,35 @@ obs1 = pd.read_csv("output/benchmark_observations.txt",
 
 cutoffs_vec = [100, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
 
-#%%
-for cutoff in cutoffs_vec:
+# #%%
+# for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
+#     file_name = "~/Cel_GRN_manuscript/output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
     
-    thisGRN_dict = {}
+#     thisGRN_dict = {}
     
-    thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
+#     thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
         
-    thisGRN_kws = {
+#     thisGRN_kws = {
         
-        str(cutoff):{
-            'methods' : ['mlm', 'ulm', 'wsum'],
-            'consensus' : True,
-            # 'dense' : True
-            }
-        }
+#         str(cutoff):{
+#             'methods' : ['mlm', 'ulm', 'wsum'],
+#             'consensus' : True,
+#             # 'dense' : True
+#             }
+#         }
         
-    thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
+#     thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
     
-    dc.plot_metrics_scatter_cols(thisoutput, col = 'method', figsize = (9, 5), groupby = 'net')
+#     dc.plot_metrics_scatter_cols(thisoutput, col = 'method', figsize = (9, 5), groupby = 'net')
     
-    thisoutput.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTexcl_benchRAW.tsv", sep='\t', index=False)  
+#     thisoutput.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTexcl_benchRAW.tsv", sep='\t', index=False)  
 
 #%%    
 
 for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
     
     thisGRN_dict = {}
     
@@ -97,34 +97,34 @@ for cutoff in cutoffs_vec:
   
 #%%  
     
-for cutoff in cutoffs_vec:
+# for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
+#     file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
     
-    thisGRN_dict = {}
+#     thisGRN_dict = {}
     
-    thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  # Assuming you're using pandas to read the file
+#     thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  # Assuming you're using pandas to read the file
         
-    thisGRN_kws = {
+#     thisGRN_kws = {
         
-        str(cutoff):{
-            'methods' : ['mlm', 'ulm', 'wsum'],
-            'consensus' : True,
-            # 'dense' : True
-            }
-        }
+#         str(cutoff):{
+#             'methods' : ['mlm', 'ulm', 'wsum'],
+#             'consensus' : True,
+#             # 'dense' : True
+#             }
+#         }
         
-    thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws) 
+#     thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws) 
     
-    dc.plot_metrics_scatter_cols(thisoutput, col = 'method', figsize = (9, 5), groupby = 'net')
+#     dc.plot_metrics_scatter_cols(thisoutput, col = 'method', figsize = (9, 5), groupby = 'net')
     
-    thisoutput.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTincl_benchRAW.tsv", sep='\t', index=False)  
+#     thisoutput.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTincl_benchRAW.tsv", sep='\t', index=False)  
   
 #%%      
 
 for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
     
     thisGRN_dict = {}
     
@@ -149,11 +149,11 @@ for cutoff in cutoffs_vec:
     
 HOTchip_dict = {}
 
-HOTchip_dict["20"] = pd.read_table("output/GRNs/allChIP_3000_HOTcut20.txt")  
-HOTchip_dict["30"] = pd.read_table("output/GRNs/allChIP_3000_HOTcut30.txt")
-HOTchip_dict["40"] = pd.read_table("output/GRNs/allChIP_3000_HOTcut40.txt")
-HOTchip_dict["50"] = pd.read_table("output/GRNs/allChIP_3000_HOTcut50.txt")
-HOTchip_dict["70"] = pd.read_table("output/GRNs/allChIP_3000_HOTcut70.txt")
+HOTchip_dict["20"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTcut20.txt")  
+HOTchip_dict["30"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTcut30.txt")
+HOTchip_dict["40"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTcut40.txt")
+HOTchip_dict["50"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTcut50.txt")
+HOTchip_dict["70"] = pd.read_table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTcut70.txt")
 
 HOTchip_kws = {
     
@@ -199,7 +199,7 @@ HOTchip_output_raptor.to_csv("output/benchmark_out/HotCut_bench.tsv", sep='\t', 
 
 for cutoff in cutoffs_vec:
 
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
     
     thisGRN_dict = {}
     
@@ -235,84 +235,84 @@ for cutoff in cutoffs_vec:
 
 # run iterations for shuffled networks
 
-for cutoff in cutoffs_vec:
+# for cutoff in cutoffs_vec:
 
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
+#     file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTincl.txt"
     
-    thisGRN_dict = {}
+#     thisGRN_dict = {}
     
-    thisGRN_kws = {
+#     thisGRN_kws = {
         
-        str(cutoff) + "_shuffle":{
-            'methods' : ['mlm', 'ulm', 'wsum'],
-            'consensus' : True,
-            # 'dense' : True
-            },
-        }
+#         str(cutoff) + "_shuffle":{
+#             'methods' : ['mlm', 'ulm', 'wsum'],
+#             'consensus' : True,
+#             # 'dense' : True
+#             },
+#         }
         
-    shuffle_stats = []
+#     shuffle_stats = []
     
-    for i in range(1, 101):
+#     for i in range(1, 101):
 
-        thisGRN_dict[str(cutoff)] = pd.read_table(file_name) 
+#         thisGRN_dict[str(cutoff)] = pd.read_table(file_name) 
     
-        thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight', seed = i).drop_duplicates(['source', 'target'])
+#         thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight', seed = i).drop_duplicates(['source', 'target'])
         
-        shuffledict = {str(cutoff) + "_shuffle": thisGRN_dict[str(cutoff) + "_shuffle"]}
+#         shuffledict = {str(cutoff) + "_shuffle": thisGRN_dict[str(cutoff) + "_shuffle"]}
         
-        thisoutput = dc.benchmark(benchRAW, obs1, shuffledict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
+#         thisoutput = dc.benchmark(benchRAW, obs1, shuffledict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
 
-        my_selection = thisoutput[thisoutput['metric'].isin(["auroc", "auprc"])]
+#         my_selection = thisoutput[thisoutput['metric'].isin(["auroc", "auprc"])]
         
-        shuffle_stats.append(my_selection)
+#         shuffle_stats.append(my_selection)
 
-    combined_df = pd.concat(shuffle_stats, ignore_index = True)
+#     combined_df = pd.concat(shuffle_stats, ignore_index = True)
 
-    combined_df.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTincl_benchRAW_shufflestats.tsv", sep = '\t', index=False)  
+#     combined_df.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTincl_benchRAW_shufflestats.tsv", sep = '\t', index=False)  
 
 # run iterations for shuffled networks
 
 #%%   
 
+# for cutoff in cutoffs_vec:
+
+#     file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
+    
+#     thisGRN_dict = {}
+    
+#     thisGRN_kws = {
+        
+#         str(cutoff) + "_shuffle":{
+#             'methods' : ['mlm', 'ulm', 'wsum'],
+#             'consensus' : True,
+#             # 'dense' : True
+#             },
+#         }
+        
+#     shuffle_stats = []
+    
+#     for i in range(1, 101):
+
+#         thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
+    
+#         thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight', seed = i).drop_duplicates(['source', 'target'])
+        
+#         shuffledict = {str(cutoff) + "_shuffle": thisGRN_dict[str(cutoff) + "_shuffle"]}
+        
+#         thisoutput = dc.benchmark(benchRAW, obs1, shuffledict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
+
+#         my_selection = thisoutput[thisoutput['metric'].isin(["auroc", "auprc"])]
+        
+#         shuffle_stats.append(my_selection)
+
+#     combined_df = pd.concat(shuffle_stats, ignore_index = True)
+
+#     combined_df.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTexcl_benchRAW_shufflestats.tsv", sep = '\t', index=False)  
+    
+
 for cutoff in cutoffs_vec:
 
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
-    
-    thisGRN_dict = {}
-    
-    thisGRN_kws = {
-        
-        str(cutoff) + "_shuffle":{
-            'methods' : ['mlm', 'ulm', 'wsum'],
-            'consensus' : True,
-            # 'dense' : True
-            },
-        }
-        
-    shuffle_stats = []
-    
-    for i in range(1, 101):
-
-        thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
-    
-        thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight', seed = i).drop_duplicates(['source', 'target'])
-        
-        shuffledict = {str(cutoff) + "_shuffle": thisGRN_dict[str(cutoff) + "_shuffle"]}
-        
-        thisoutput = dc.benchmark(benchRAW, obs1, shuffledict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
-
-        my_selection = thisoutput[thisoutput['metric'].isin(["auroc", "auprc"])]
-        
-        shuffle_stats.append(my_selection)
-
-    combined_df = pd.concat(shuffle_stats, ignore_index = True)
-
-    combined_df.to_csv("output/benchmark_out/allChIP_cutoff" + str(cutoff) + "_HOTexcl_benchRAW_shufflestats.tsv", sep = '\t', index=False)  
-    
-
-for cutoff in cutoffs_vec:
-
-    file_name = "output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/allChIP_" + str(cutoff) + "_HOTexcl.txt"
     
     thisGRN_dict = {}
     

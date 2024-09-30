@@ -17,7 +17,7 @@ from pathlib import Path
 
 home_directory = os.path.expanduser("~")
 
-working_directory = os.path.join(home_directory, "Cel_GRN_manuscript")
+working_directory = os.path.join(home_directory, "Cel_GRN_revisions")
 
 os.chdir(working_directory)
 
@@ -46,41 +46,41 @@ obs1 = pd.read_csv("output/benchmark_observations.txt",
 cutoffs_vec = [100, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
 
 
-for cutoff in cutoffs_vec:
+# for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/FIMO_nohomo_" + str(cutoff) + ".txt"
+#     file_name = "output/GRNs/FIMO_nohomo_" + str(cutoff) + ".txt"
     
-    thisGRN_dict = {}
+#     thisGRN_dict = {}
     
-    thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
+#     thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
     
-    thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight').drop_duplicates(['source', 'target'])
+#     thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight').drop_duplicates(['source', 'target'])
     
-    thisGRN_kws = {
+#     thisGRN_kws = {
         
-        str(cutoff):{
-            'methods' : ['mlm', 'ulm', 'wsum'],
-            'consensus' : True,
-            # 'dense' : True
-            },
-        str(cutoff) + "_shuffle":{
-            'methods' : ['mlm', 'ulm', 'wsum'],
-            'consensus' : True,
-            # 'dense' : True
-            },
-        }
+#         str(cutoff):{
+#             'methods' : ['mlm', 'ulm', 'wsum'],
+#             'consensus' : True,
+#             # 'dense' : True
+#             },
+#         str(cutoff) + "_shuffle":{
+#             'methods' : ['mlm', 'ulm', 'wsum'],
+#             'consensus' : True,
+#             # 'dense' : True
+#             },
+#         }
         
-    thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
+#     thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws)  
     
-    dc.plot_metrics_scatter_cols(thisoutput, col = 'method', figsize = (9, 5), groupby = 'net')
+#     dc.plot_metrics_scatter_cols(thisoutput, col = 'method', figsize = (9, 5), groupby = 'net')
     
-    thisoutput.to_csv("output/benchmark_out/FIMO_nohomo_cutoff" + str(cutoff) + "_benchRAW.tsv", sep='\t', index=False) 
+#     thisoutput.to_csv("output/benchmark_out/FIMO_nohomo_cutoff" + str(cutoff) + "_benchRAW.tsv", sep='\t', index=False) 
 
 #%%    
 
 for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/FIMO_nohomo_" + str(cutoff) + ".txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/FIMO_nohomo_" + str(cutoff) + ".txt"
     
     thisGRN_dict = {}
     
@@ -114,7 +114,7 @@ cutoffs_vec = [100, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
 
 for cutoff in cutoffs_vec:
 
-    file_name = "output/GRNs/FIMO_nohomo_" + str(cutoff) + ".txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/FIMO_nohomo_" + str(cutoff) + ".txt"
     
     thisGRN_dict = {}
     
@@ -151,37 +151,37 @@ for cutoff in cutoffs_vec:
 
 #%%   
 
-homoparam_vec = [1, 3, 5, 7]
+# homoparam_vec = [1, 3, 5, 7]
 
-for homoparam in homoparam_vec:
+# for homoparam in homoparam_vec:
     
-    for cutoff in cutoffs_vec:
+#     for cutoff in cutoffs_vec:
         
-        file_name = "output/GRNs/FIMO_homoparam" + str(homoparam) + "_" + str(cutoff) + ".txt"
+#         file_name = "output/GRNs/FIMO_homoparam" + str(homoparam) + "_" + str(cutoff) + ".txt"
         
-        thisGRN_dict = {}
+#         thisGRN_dict = {}
         
-        thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
+#         thisGRN_dict[str(cutoff)] = pd.read_table(file_name)  
         
-        thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight').drop_duplicates(['source', 'target'])
+#         thisGRN_dict[str(cutoff) + "_shuffle"] = dc.shuffle_net(net = thisGRN_dict[str(cutoff)], target='target', weight='weight').drop_duplicates(['source', 'target'])
         
-        thisGRN_kws = {
+#         thisGRN_kws = {
             
-            str(cutoff):{
-                'methods' : ['mlm', 'ulm', 'wsum'],
-                'consensus' : True,
-                # 'dense' : True
-                },
-            str(cutoff) + "_shuffle":{
-                'methods' : ['mlm', 'ulm', 'wsum'],
-                'consensus' : True,
-                # 'dense' : True
-                },
-            }
+#             str(cutoff):{
+#                 'methods' : ['mlm', 'ulm', 'wsum'],
+#                 'consensus' : True,
+#                 # 'dense' : True
+#                 },
+#             str(cutoff) + "_shuffle":{
+#                 'methods' : ['mlm', 'ulm', 'wsum'],
+#                 'consensus' : True,
+#                 # 'dense' : True
+#                 },
+#             }
         
-        thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws) 
+#         thisoutput = dc.benchmark(benchRAW, obs1, thisGRN_dict, perturb='target_gseq', sign=-1, verbose=True, decouple_kws=thisGRN_kws) 
         
-        thisoutput.to_csv("output/benchmark_out/FIMO_homoparam" +str(homoparam) + "_cutoff" + str(cutoff) + "_benchRAW.tsv", sep='\t', index=False) 
+#         thisoutput.to_csv("output/benchmark_out/FIMO_homoparam" +str(homoparam) + "_cutoff" + str(cutoff) + "_benchRAW.tsv", sep='\t', index=False) 
 
 
 
@@ -193,7 +193,7 @@ for homoparam in homoparam_vec:
     
     for cutoff in cutoffs_vec:
         
-        file_name = "output/GRNs/FIMO_homoparam" + str(homoparam) + "_" + str(cutoff) + ".txt"
+        file_name = "~/Cel_GRN_manuscript/output/GRNs/FIMO_homoparam" + str(homoparam) + "_" + str(cutoff) + ".txt"
         
         thisGRN_dict = {}
         
@@ -226,7 +226,7 @@ homo_cutoffs_vec = [100, 500, 1000, 2000]
 
 for cutoff in homo_cutoffs_vec:
 
-    file_name = "output/GRNs/FIMO_homoparam5_" + str(cutoff) + ".txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/FIMO_homoparam5_" + str(cutoff) + ".txt"
     
     thisGRN_dict = {}
     
