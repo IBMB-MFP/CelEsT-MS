@@ -10,8 +10,8 @@ options(scipen=10000)
 
 # here create new folder and set working directory within it
 
-dir.create("~/Cel_GRN_manuscript/")
-setwd("~/Cel_GRN_manuscript/")
+dir.create("~/Cel_GRN_revisions/")
+setwd("~/Cel_GRN_revisions/")
 
 # create subfolders for input, output and graphics
 
@@ -105,17 +105,29 @@ gh_package.check <- lapply(
 
 #### INPUT DATA ####
 
-walhout_unfiltered <- read.table("output/walhoutGRN_unfiltered.txt",
+eY1H_net <- read.table("output/walhoutGRN_unfiltered.txt",
                                  header = TRUE)
+# eY1H_net <- read.table("~/Cel_GRN_manuscript/output/walhoutGRN_unfiltered.txt", header = TRUE)
 
-walhout_unfiltered_Tfs <- unique(walhout_unfiltered$source)
+FIMO_nohomo_1000 <- read.table("output/GRNs/FIMO_nohomo_1000_unfiltered.txt",
+                               header = TRUE)
+
+ChIP_HOTexcl_nocut <- read.table("output/GRNs/allChIP_10000_HOTexcl_unfiltered.txt",
+                                 header = TRUE)
+# ChIP_HOTexcl_nocut <- read.table("~/Cel_GRN_manuscript/output/GRNs/allChIP_10000_HOTexcl_unfiltered.txt", header = TRUE)
+
+walhout_unfiltered_Tfs <- unique(eY1H_net$source)
 
 allmodERN_TFsONLY_BM <- readRDS("output/allmodERN_TFsONLY_BM.rds")
+# allmodERN_TFsONLY_BM <- readRDS("~/Cel_GRN_manuscript/output/allmodERN_TFsONLY_BM.rds")
+
 ChIP_TFs <- allmodERN_TFsONLY_BM$wormbase_gseq
 
 separate_by_motif <- readRDS("output/separate_by_motif.rds")
-FIMO_Tfs <- names(separate_by_motif)
+# separate_by_motif <- readRDS("~/Cel_GRN_manuscript/output/separate_by_motif.rds")
 
+FIMO_Tfs <- names(separate_by_motif)
+FIMO_Tfs[!FIMO_Tfs %in% unique(combo_GRN$source)]
 # how many?
 unique(c(walhout_unfiltered_Tfs, ChIP_TFs, FIMO_Tfs))
 
@@ -126,45 +138,9 @@ sum(ChIP_TFs %in% unique(combo_GRN$source))
 sum(FIMO_Tfs %in% unique(combo_GRN$source))
 sum(walhout_unfiltered_Tfs %in% unique(combo_GRN$source))
 
-# this is incorrect. should be as below
-Tfs_alldata_fit <- euler(c("Motif" = sum(!FIMO_Tfs %in% c(walhout_unfiltered_Tfs, ChIP_TFs)),
-                "ChIP" = sum(!ChIP_TFs %in% c(walhout_unfiltered_Tfs, FIMO_Tfs)),
-                "eY1H" = sum(!walhout_unfiltered_Tfs %in% c(FIMO_Tfs, ChIP_TFs)),
-                "Motif&ChIP" = length(base::intersect(FIMO_Tfs, 
-                                                   ChIP_TFs)),
-                "Motif&eY1H" = length(base::intersect(FIMO_Tfs,
-                                                  walhout_unfiltered_Tfs)),
-                "ChIP&eY1H" = length(base::intersect(walhout_unfiltered_Tfs, 
-                                                   ChIP_TFs)),
-                "Motif&ChIP&eY1H" = length(base::intersect(base::intersect(FIMO_Tfs,
-                                           walhout_unfiltered_Tfs), ChIP_TFs))))
-
-saveRDS(Tfs_alldata_fit,
-        "plotdata/TFs_eulerr.rds")
-
-pdf("graphics/TFs_eulerr.pdf",
-    height = 2,
-    width = 2)
-
-plot(Tfs_alldata_fit,
-     fill = c("dodgerblue", "orange", "purple"),
-     labels = list(cex = 0.8),
-     quantities = list(cex = 0.5))
-
-dev.off()
-
 # do eulerr plot for interactions
 
-FIMO_nohomo_1500 <- read.table("output/GRNs/FIMO_nohomo_1500.txt",
-                               header = TRUE)
-
-ChIP_HOTexcl_nocut <- read.table("output/GRNs/allChIP_10000_HOTexcl_unfiltered.txt",
-                                 header = TRUE)
-
-eY1H_net <- read.table("output/GRNs/walhoutGRN_unfiltered.txt",
-                       header = TRUE)
-
-interactions_present <- sapply(list(FIMO_nohomo_1500,
+interactions_present <- sapply(list(FIMO_nohomo_1000,
                                     ChIP_HOTexcl_nocut,
             eY1H_net), function(x){     
               
@@ -236,7 +212,7 @@ pdf("graphics/TFs_finalnetwork_eulerr.pdf",
     width = 2.222)
 
 p <- plot(Tfs_finaldata_fit,
-          fill = c("dodgerblue", "orange", "purple"),
+          fill = c("magenta", "orange", "grey"),
           labels = list(cex = 0.7),
           quantities = list(cex = 0.5))
 
@@ -255,7 +231,7 @@ combo_GRN_common <- combo_GRN[combo_GRN$source %in% commonTFs, ]
 nrow(combo_GRN_common)
 unique(combo_GRN$source)
 
-common_interactions_present <- sapply(list(FIMO_nohomo_1500,
+common_interactions_present <- sapply(list(FIMO_nohomo_1000,
                                     ChIP_HOTexcl_nocut,
                                     eY1H_net), function(x){     
                                       
@@ -292,7 +268,7 @@ pdf("graphics/common_edges_eulerr.pdf",
     width = 2)
 
 plot(allthreecommon_edges_euler,
-     fill = c("dodgerblue", "orange", "purple"),
+     fill = c("magenta", "orange", "grey"),
      quantities = list(cex = 0.5))
 
 dev.off()
