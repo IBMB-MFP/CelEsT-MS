@@ -10,8 +10,8 @@ options(scipen=10000)
 
 # here create new folder and set working directory within it
 
-dir.create("~/Cel_GRN_manuscript/")
-setwd("~/Cel_GRN_manuscript/")
+dir.create("~/Cel_GRN_revisions/")
+setwd("~/Cel_GRN_revisions/")
 
 # create subfolders for input, output and graphics
 
@@ -194,7 +194,7 @@ pdf("graphics/ChIPorth_allnetlines_HOTexcl_AUPRC.pdf",
 ggplot(data = three_HOTexcl_benchraptor_allmethods_plot, aes(x = as.numeric(net), y = auprc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta", "blue")) +
+  scale_color_manual(values = c("dark grey", "purple", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Precision (AUPRC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -220,7 +220,7 @@ pdf("graphics/ChIPorth_allnetlines_HOTexcl_AUROC.pdf",
 ggplot(data = three_HOTexcl_benchraptor_allmethods_plot, aes(x = as.numeric(net), y = auroc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta", "blue")) +
+  scale_color_manual(values = c("dark grey", "purple", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Sensitivity (AUROC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -246,7 +246,7 @@ pdf("graphics/ChIPorth_allnetlines_HOTexcl_AUPRC_LEGEND.pdf",
 ggplot(data = three_HOTexcl_benchraptor_allmethods_plot, aes(x = as.numeric(net), y = auprc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta", "blue")) +
+  scale_color_manual(values = c("dark grey", "purple", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Precision (AUPRC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -272,7 +272,7 @@ pdf("graphics/ChIPorth_twonetlines_HOTexcl_AUPRC.pdf",
 ggplot(data = three_HOTexcl_benchraptor_allmethods_plot[!str_detect(three_HOTexcl_benchraptor_allmethods_plot$order, "CisBP"), ], aes(x = as.numeric(net), y = auprc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta")) +
+  scale_color_manual(values = c("dark grey", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Precision (AUPRC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -298,7 +298,7 @@ pdf("graphics/ChIPorth_twonetlines_HOTexcl_AUROC.pdf",
 ggplot(data = three_HOTexcl_benchraptor_allmethods_plot[!str_detect(three_HOTexcl_benchraptor_allmethods_plot$order, "CisBP"), ], aes(x = as.numeric(net), y = auroc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta")) +
+  scale_color_manual(values = c("dark grey", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Sensitivity (AUROC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -398,7 +398,7 @@ pdf("graphics/ChIPorth_allnetlines_HOTincl_AUPRC.pdf",
 ggplot(data = three_HOTincl_benchraptor_allmethods_plot, aes(x = as.numeric(net), y = auprc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "blue", "magenta")) +
+  scale_color_manual(values = c("dark grey", "purple", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Precision (AUPRC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -424,7 +424,7 @@ pdf("graphics/ChIPorth_allnetlines_HOTincl_AUROC.pdf",
 ggplot(data = three_HOTincl_benchraptor_allmethods_plot, aes(x = as.numeric(net), y = auroc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "blue", "magenta")) +
+  scale_color_manual(values = c("dark grey", "purple", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Sensitivity (AUROC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -450,7 +450,7 @@ pdf("graphics/ChIPorth_allnetlines_HOTincl_AUPRC_LEGEND.pdf",
 ggplot(data = three_HOTincl_benchraptor_allmethods_plot, aes(x = as.numeric(net), y = auprc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "blue", "magenta")) +
+  scale_color_manual(values = c("dark grey", "purple", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Precision (AUPRC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -476,7 +476,7 @@ pdf("graphics/ChIPorth_twonetlines_HOTincl_AUPRC.pdf",
 ggplot(data = three_HOTincl_benchraptor_allmethods_plot[!str_detect(three_HOTincl_benchraptor_allmethods_plot$order, "CisBP"), ], aes(x = as.numeric(net), y = auprc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta")) +
+  scale_color_manual(values = c("dark grey", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Precision (AUPRC)") +
   xlab("Cutoff (log"[10]~"scale)") +
@@ -502,7 +502,7 @@ pdf("graphics/ChIPorth_twonetlines_HOTincl_AUROC.pdf",
 ggplot(data = three_HOTincl_benchraptor_allmethods_plot[!str_detect(three_HOTincl_benchraptor_allmethods_plot$order, "CisBP"), ], aes(x = as.numeric(net), y = auroc, colour = order)) + 
   geom_point() + 
   geom_line() + 
-  scale_color_manual(values = c("dark green", "magenta")) +
+  scale_color_manual(values = c("dark grey", "red")) +
   scale_x_log10(breaks = c(100, 500, 1000, 1500, 2000, 2500, 3000, 5000)) +
   ylab("Sensitivity (AUROC)") +
   xlab("Cutoff (log"[10]~"scale)") +

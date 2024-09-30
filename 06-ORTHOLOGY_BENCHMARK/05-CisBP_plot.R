@@ -15,7 +15,7 @@ options(scipen=10000)
 
 # here create new folder and set working directory within it
 
-setwd("~/Cel_GRN_manuscript")
+setwd("~/Cel_GRN_revisions")
 
 #### DEFINE FUNCTIONS ####
 
@@ -189,9 +189,11 @@ TForth_benchraptor_shufflestats_df[, "label"] <- TForth_labelvec[TForth_benchrap
 
 saveRDS(TForth_benchraptormethods_plot,
         "plotdata/TForth_benchraptormethods_plot.rds")
+# TForth_benchraptormethods_plot <- readRDS("plotdata/TForth_benchraptormethods_plot.rds")
 
 saveRDS(TForth_benchraptor_shufflestats_df,
         "plotdata/TForth_benchraptor_shufflestats_df.rds")
+# TForth_benchraptor_shufflestats_df <- readRDS("plotdata/TForth_benchraptor_shufflestats_df.rds")
 
 method_labels <- c("Consensus", "MLM", "ULM", "WSum")
 names(method_labels) <- c("consensus_estimate", "mlm_estimate", "ulm_estimate", "wsum_norm")
@@ -203,13 +205,17 @@ pdf("graphics/TForth_benchRAPToR_methodsplot.pdf",
 ggplot(data = TForth_benchraptormethods_plot[!TForth_benchraptormethods_plot$method %in% c("wsum_estimate", "wsum_corr") &
                                                TForth_benchraptormethods_plot$net != "TForth_unequal", ], aes(x = auroc, y = auprc, colour = net)) + 
   geom_point(size = 2) +
-  geom_label_repel(aes(label = label),
+  geom_label_repel(aes(label = label,
+                       fill = net),
+                   colour = "black",
                    label.size = 0.1,
                    max.overlaps = 15,
                    box.padding = 0.3,
                    label.padding = 0.1,
                    point.padding = 0,
                    size = 2) +
+  scale_colour_manual(values = c(palette.colors(palette = "R4")[3], palette.colors(palette = "R4")[8], palette.colors(palette = "R4")[6], palette.colors(palette = "R4")[2])) +
+  scale_fill_manual(values = c(palette.colors(palette = "R4")[3], palette.colors(palette = "R4")[8], palette.colors(palette = "R4")[6], palette.colors(palette = "R4")[2])) +
   geom_vline(xintercept = 0.5,
              linetype = "dashed",
              col = "black") +
@@ -233,10 +239,10 @@ ggplot(data = TForth_benchraptormethods_plot[!TForth_benchraptormethods_plot$met
   geom_point(data = TForth_benchraptor_shufflestats_df[!TForth_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc), alpha = 0.5) + 
   geom_errorbar(data = TForth_benchraptor_shufflestats_df[!TForth_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                                                   ymin = (mean_auprc - sd_auprc),
-                                                                                                                                                  ymax = (mean_auprc + sd_auprc)), alpha = 0.5) +
+                                                                                                                                                  ymax = (mean_auprc + sd_auprc)), alpha = 0.5, width = 0.01) +
   geom_errorbar(data = TForth_benchraptor_shufflestats_df[!TForth_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                                                   xmin = (mean_auroc - sd_auroc),
-                                                                                                                                                  xmax = (mean_auroc + sd_auroc)), alpha = 0.5)
+                                                                                                                                                  xmax = (mean_auroc + sd_auroc)), alpha = 0.5, width = 0.01)
 
 dev.off()
 
@@ -248,13 +254,17 @@ ggplot(data = TForth_benchraptormethods_plot[!str_detect(TForth_benchraptormetho
                                                TForth_benchraptormethods_plot$method == "mlm_estimate" &
                                                TForth_benchraptormethods_plot$net != "TForth_unequal", ], aes(x = auroc, y = auprc, colour = net)) + 
   geom_point(size = 2) +
-  geom_label_repel(aes(label = label),
+  geom_label_repel(aes(label = label,
+                       fill = net),
+                   colour = "black",
                    label.size = 0.1,
                    max.overlaps = 10,
                    box.padding = 0.2,
                    label.padding = 0.1,
                    point.padding = 0,
                    size = 3) +
+  scale_colour_manual(values = c(palette.colors(palette = "R4")[3], palette.colors(palette = "R4")[8], palette.colors(palette = "R4")[6], palette.colors(palette = "R4")[2])) +
+  scale_fill_manual(values = c(palette.colors(palette = "R4")[3], palette.colors(palette = "R4")[8], palette.colors(palette = "R4")[6], palette.colors(palette = "R4")[2])) +
   geom_vline(xintercept = 0.5,
              linetype = "dashed",
              col = "black") +
@@ -275,8 +285,9 @@ ggplot(data = TForth_benchraptormethods_plot[!str_detect(TForth_benchraptormetho
   geom_point(data = TForth_benchraptor_shufflestats_df[TForth_benchraptor_shufflestats_df$method == "mlm_estimate", ], aes(x = mean_auroc, y = mean_auprc), alpha = 0.5) + 
   geom_errorbar(data = TForth_benchraptor_shufflestats_df[TForth_benchraptor_shufflestats_df$method == "mlm_estimate", ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                               ymin = (mean_auprc - sd_auprc),
-                                                                                                                              ymax = (mean_auprc + sd_auprc)), alpha = 0.5) +
+                                                                                                                              ymax = (mean_auprc + sd_auprc)), alpha = 0.5, width = 0.01) +
   geom_errorbar(data = TForth_benchraptor_shufflestats_df[TForth_benchraptor_shufflestats_df$method == "mlm_estimate", ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                               xmin = (mean_auroc - sd_auroc),
-                                                                                                                              xmax = (mean_auroc + sd_auroc)), alpha = 0.5)
+                                                                                                                              xmax = (mean_auroc + sd_auroc)), alpha = 0.5, width = 0.01)
+
 dev.off()

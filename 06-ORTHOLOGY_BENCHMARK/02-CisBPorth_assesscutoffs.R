@@ -2,7 +2,6 @@
 
 rm(list = ls(all = TRUE))
 
-
 # clear all loaded packages
 # invisible(lapply(paste0("package:", names(sessionInfo()$otherPkgs)),
 #                  detach,
@@ -16,7 +15,7 @@ options(scipen=10000)
 
 # here create new folder and set working directory within it
 
-setwd("~/Cel_GRN_manuscript")
+setwd("~/Cel_GRN_revisions")
 
 #### DEFINE FUNCTIONS ####
 
@@ -145,13 +144,15 @@ gh_package.check <- lapply(
 bench_out_filelist <- list.files("output/benchmark_out/")
 GRN_filelist <- list.files("output/GRNs") 
 
+# GRN_filelist <- list.files("~/Cel_GRN_manuscript/output/GRNs") 
+
 #### SCATTERPLOTS ####
 
 TForthprobs_files <- bench_out_filelist[str_detect(bench_out_filelist, "TF_orth")]
 TForthprobs_GRNs <- GRN_filelist[str_detect(GRN_filelist, "TF_orth")]
 
 cutoffs_vec <- c(500, 1000, 1500, 2000, 2500, 3000, 5000, 10000)
-fdr_vec <- c(0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8)
+fdr_vec <- c(0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 
 method_labels <- c("Consensus", "MLM", "ULM", "WSum")
 names(method_labels) <- c("consensus_estimate", "mlm_estimate", "ulm_estimate", "wsum_norm")
@@ -160,7 +161,9 @@ TFnumbers <- sapply(cutoffs_vec, function(thiscutoff){
 
   sapply(fdr_vec, function(thisfdr){
 
-    tempGRN <- read.table(paste0("output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
+    # tempGRN <- read.table(paste0("output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
+    #                       header = TRUE)
+    tempGRN <- read.table(paste0("~/Cel_GRN_manuscript/output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
                           header = TRUE)
     
     length(unique(tempGRN$source))
@@ -175,8 +178,11 @@ row.names(TFnumbers) <- fdr_vec
 TF_meantarget_numbers <- sapply(cutoffs_vec, function(thiscutoff){
   
   sapply(fdr_vec, function(thisfdr){
-    
-    tempGRN <- read.table(paste0("output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
+    # 
+    # tempGRN <- read.table(paste0("output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
+    #                       header = TRUE)
+
+    tempGRN <- read.table(paste0("~/Cel_GRN_manuscript/output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
                           header = TRUE)
     
     mean(table(tempGRN$source))
@@ -192,7 +198,10 @@ TF_mediantarget_numbers <- sapply(cutoffs_vec, function(thiscutoff){
   
   sapply(fdr_vec, function(thisfdr){
     
-    tempGRN <- read.table(paste0("output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
+    # tempGRN <- read.table(paste0("output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
+    #                       header = TRUE)
+    
+    tempGRN <- read.table(paste0("~/Cel_GRN_manuscript/output/GRNs/TF_orthprobs_cut", thiscutoff, "_fdr", thisfdr, ".txt"),
                           header = TRUE)
     
     median(table(tempGRN$source))

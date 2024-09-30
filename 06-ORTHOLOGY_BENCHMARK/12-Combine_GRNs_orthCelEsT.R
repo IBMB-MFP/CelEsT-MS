@@ -215,7 +215,8 @@ bioc_package.check <- lapply(
 
 # Here define packages to be loaded through Github
 
-github_packages <- c("r-lib/conflicted")
+github_packages <- c("r-lib/conflicted",
+                     "LBMC/wormRef")
 
 if (!requireNamespace("devtools", quietly = TRUE)){
   install.packages("devtools")}
@@ -246,11 +247,11 @@ observations <- read.table("output/benchmark_observations.txt",
                            sep = "\t",
                            header = TRUE)
 
-TF_orth1500fdr5 <- read.table("output/GRNs/TF_orthprobs_cut1500_fdr0.5unfiltered.txt",
+TF_orth1500fdr8 <- read.table("output/GRNs/TF_orthprobs_cut1500_fdr0.8unfiltered.txt",
                                sep = "\t",
                                header = TRUE)
 
-FIMO1500 <- read.table("output/GRNs/FIMO_nohomo_1500_unfiltered.txt",
+FIMO1000 <- read.table("output/GRNs/FIMO_nohomo_1000.txt",
                        sep = "\t",
                        header = TRUE)
 
@@ -259,9 +260,6 @@ FIMO1500 <- read.table("output/GRNs/FIMO_nohomo_1500_unfiltered.txt",
 ChIP_HOTexcl_nocut <- read.table("output/GRNs/allChIP_10000_HOTexcl.txt",
                                 sep = "\t",
                                 header = TRUE)
-
-# ensure to exclude cfi-1
-ChIP_HOTexcl_nocut <- ChIP_HOTexcl_nocut[ChIP_HOTexcl_nocut$source != "T23D8.8", ]
 
 ChIPorth500 <- read.table("output/GRNs/ChIPorth_500_HOTincl_unfiltered.txt",
                           header = TRUE)
@@ -273,16 +271,28 @@ eY1H_net <- read.table("output/GRNs/walhoutGRN_unfiltered.txt",
                        sep = "\t",
                        header = TRUE)
 
+fullsetTFs_BM <- readRDS("output/fullset_TFs_BM.rds")
+fullsetTFS_BM_MOR <- read.table("output/fullset_TFs_BM_with_MOR_for_TS2.txt",
+                                sep = "\t",
+                                header = TRUE)
+
+# fullsetTFs_BM <- readRDS("~/Cel_GRN_manuscript/output/fullset_TFs_BM.rds")
+# fullsetTFS_BM_MOR <- read.table("~/Cel_GRN_manuscript/output/fullset_TFs_BM_with_MOR_for_TS2.txt",
+#                                 sep = "\t",
+#                                 header = TRUE)
+
+# setwd("~/Cel_GRN_revisions")
+
 #### COMBINE NETWORKS ####
 
 allTFs_targets <- readRDS("output/MODernENCODE_manualtoptargets_operon&HOTexcluded.rds")
 
 # combine to form simple network
 
-do.all.GRN.combinations(GRNlist = list(TF_orth1500fdr5,
+do.all.GRN.combinations(GRNlist = list(TF_orth1500fdr8,
                                        ChIPorth1000,
                                        eY1H_net),
-                        prefix = "orthCelEsT",
+                        prefix = "orthCelEsT_revisions",
                         weight_vec = c(0.2, 0.5, 0.3))
 
 # it's good!
@@ -290,8 +300,10 @@ do.all.GRN.combinations(GRNlist = list(TF_orth1500fdr5,
 # stats? 
 
 orthCelEsT <- read.table("output/GRNs/orthCelEsT_equalweights.txt", header = TRUE)
+# orthCelEsT <- read.table("~/Cel_GRN_revisions/output/GRNs/orthCelEsT_equalweights.txt", header = TRUE)
 
 allthree_equal <- read.table("output/GRNs/allthree_equalweights.txt", header = TRUE)
+# allthree_equal <- read.table("~/Cel_GRN_revisions/output/GRNs/allthree_equalweights.txt", header = TRUE)
 
 length(unique(orthCelEsT$source))
 length(unique(allthree_equal$source))
@@ -301,7 +313,7 @@ mean(table(allthree_equal$source))
 
 # do eulerr plot for interactions
 
-interactions_present <- sapply(list(TF_orth1500fdr5,
+interactions_present <- sapply(list(TF_orth1500fdr8,
                                     ChIPorth1000,
                                     eY1H_net), function(x){     
                                       
@@ -345,11 +357,11 @@ dev.off()
 
 # make euler plot for interaction sharing among common TFs
 
-commonTFs <- base::intersect(base::intersect(unique(eY1H_net$source), unique(ChIPorth1000$source)), unique(TF_orth1500fdr5$source))
+commonTFs <- base::intersect(base::intersect(unique(eY1H_net$source), unique(ChIPorth1000$source)), unique(TF_orth1500fdr8$source))
 
 orthCelEsT_common <- orthCelEsT[orthCelEsT$source %in% commonTFs, ]
 
-common_interactions_present <- sapply(list(TF_orth1500fdr5,
+common_interactions_present <- sapply(list(TF_orth1500fdr8,
                                            ChIPorth1000,
                                            eY1H_net), function(x){     
                                              
@@ -380,13 +392,14 @@ orthCelEsTcommon_edges_euler <- euler(c("Motif" = rowSums(common_count_interacti
 
 saveRDS(orthCelEsTcommon_edges_euler,
         "plotdata/orthCelEsTcommon_edges_eulerr.rds")
+# orthCelEsTcommon_edges_euler <- readRDS("plotdata/orthCelEsTcommon_edges_eulerr.rds")
 
 pdf("graphics/orthCelEsT_common_edges_eulerr.pdf",
     height = 2,
     width = 2)
 
 plot(orthCelEsTcommon_edges_euler,
-     fill = c("dodgerblue", "orange", "purple"),
+     fill = c("magenta", "orange", "grey"),
      quantities = list(cex = 0.5))
 
 dev.off()
@@ -398,8 +411,8 @@ orthCelEsT_equalweights <- read.table("output/GRNs/orthCelEsT_equalweights.txt",
                                     header = TRUE)
 
 orthCelEsT_equalweights[, "with_motif"] <- NA
-orthCelEsT_equalweights[orthCelEsT_equalweights$source %in% TF_orth1500fdr5$source, "with_motif"] <- FALSE
-orthCelEsT_equalweights[paste0(orthCelEsT_equalweights$source, "-", orthCelEsT_equalweights$target) %in% paste0(TF_orth1500fdr5$source, "-", TF_orth1500fdr5$target), "with_motif"] <- TRUE
+orthCelEsT_equalweights[orthCelEsT_equalweights$source %in% TF_orth1500fdr8$source, "with_motif"] <- FALSE
+orthCelEsT_equalweights[paste0(orthCelEsT_equalweights$source, "-", orthCelEsT_equalweights$target) %in% paste0(TF_orth1500fdr8$source, "-", TF_orth1500fdr8$target), "with_motif"] <- TRUE
 
 orthCelEsT_equalweights[, "in_ChIP"] <- NA
 orthCelEsT_equalweights[orthCelEsT_equalweights$source %in% ChIPorth1000$source, "in_ChIP"] <- FALSE
@@ -409,6 +422,15 @@ orthCelEsT_equalweights[, "in_eY1H"] <- NA
 orthCelEsT_equalweights[orthCelEsT_equalweights$source %in% eY1H_net$source, "in_eY1H"] <- FALSE
 orthCelEsT_equalweights[paste0(orthCelEsT_equalweights$source, "-", orthCelEsT_equalweights$target) %in% paste0(eY1H_net$source, "-", eY1H_net$target), "in_eY1H"] <- TRUE
 
+orthCelEsT_equalweights[, "TF_WBgeneID"] <- fullsetTFS_BM_MOR[match(orthCelEsT_equalweights$source, fullsetTFS_BM_MOR$wormbase_gseq), "wormbase_gene"]
+
+orthCelEsT_equalweights[, "TF_name"] <- fullsetTFS_BM_MOR[match(orthCelEsT_equalweights$source, fullsetTFS_BM_MOR$wormbase_gseq), "wormbase_locus"]
+orthCelEsT_equalweights[orthCelEsT_equalweights$TF_name == "", "TF_name"] <- orthCelEsT_equalweights[orthCelEsT_equalweights$TF_name == "", "source"]
+
+orthCelEsT_equalweights[, "target_WBgeneID"] <- wormRef::Cel_genes[match(orthCelEsT_equalweights$target, wormRef::Cel_genes$sequence_name), "wb_id"]
+
+orthCelEsT_equalweights[, "target_name"] <- wormRef::Cel_genes[match(orthCelEsT_equalweights$target, wormRef::Cel_genes$sequence_name), "public_name"]
+
 write.table(orthCelEsT_equalweights,
             "output/orthCelEsT_annotated.txt",
             sep = "\t",
@@ -417,13 +439,12 @@ write.table(orthCelEsT_equalweights,
 
 #### MAX_CelEsT ####
 
-
 # combine to form simple network
 
-do.all.GRN.combinations(GRNlist = list(FIMO1500,
+do.all.GRN.combinations(GRNlist = list(FIMO1000,
                                        ChIPorth500,
                                        eY1H_net),
-                        prefix = "orthCelEsTMAXcov",
+                        prefix = "orthCelEsTMAXcov_rev",
                         weight_vec = c(0.2, 0.5, 0.3))
 
 # it's good!
@@ -442,7 +463,7 @@ mean(table(allthree_equal$source))
 
 # do eulerr plot for interactions
 
-MAX_interactions_present <- sapply(list(FIMO1500,
+MAX_interactions_present <- sapply(list(FIMO1000,
                                     ChIPorth500,
                                     eY1H_net), function(x){     
                                       
@@ -473,24 +494,25 @@ MAX_CelEsT_edges_euler <- euler(c("Motif" = rowSums(MAX_count_interactions)[1],
 
 saveRDS(MAX_CelEsT_edges_euler,
         "plotdata/orthCelEsT_edges_eulerr.rds")
+# MAX_CelEsT_edges_euler <- readRDS("plotdata/orthCelEsT_edges_eulerr.rds")
 
 pdf("graphics/MAX_CelEsT_edges_eulerr.pdf",
     height = 2,
     width = 2)
 
 plot(MAX_CelEsT_edges_euler,
-     fill = c("dodgerblue", "orange", "purple"),
+     fill = c("magenta", "orange", "grey"),
      quantities = list(cex = 0.5))
 
 dev.off()
 
 # make euler plot for interaction sharing among common TFs
 
-MAX_commonTFs <- base::intersect(base::intersect(unique(eY1H_net$source), unique(ChIPorth500$source)), unique(FIMO1500$source))
+MAX_commonTFs <- base::intersect(base::intersect(unique(eY1H_net$source), unique(ChIPorth500$source)), unique(FIMO1000$source))
 
 MAX_CelEsT_common <- MAX_CelEsT[MAX_CelEsT$source %in% MAX_commonTFs, ]
 
-MAX_common_interactions_present <- sapply(list(FIMO1500,
+MAX_common_interactions_present <- sapply(list(FIMO1000,
                                            ChIPorth500,
                                            eY1H_net), function(x){     
                                              
@@ -511,7 +533,7 @@ MAX_common_count_interactions <- apply(MAX_common_interactions_present, 1, funct
   
 })
 
-MAX_CelEsTMAX_common_edges_euler <- euler(c("Motif" = rowSums(MAX_common_count_interactions)[1],
+MAX_CelEsTcommon_edges_euler <- euler(c("Motif" = rowSums(MAX_common_count_interactions)[1],
                                         "ChIP" = rowSums(MAX_common_count_interactions)[2],
                                         "eY1H" = rowSums(MAX_common_count_interactions)[3],
                                         "Motif&ChIP" = rowSums(MAX_common_count_interactions)[4],
@@ -539,8 +561,8 @@ MAX_CelEsT_equalweights <- read.table("output/GRNs/orthCelEsTMAXcov_equalweights
                                       header = TRUE)
 
 MAX_CelEsT_equalweights[, "with_motif"] <- NA
-MAX_CelEsT_equalweights[MAX_CelEsT_equalweights$source %in% FIMO1500$source, "with_motif"] <- FALSE
-MAX_CelEsT_equalweights[paste0(MAX_CelEsT_equalweights$source, "-", MAX_CelEsT_equalweights$target) %in% paste0(FIMO1500$source, "-", FIMO1500$target), "with_motif"] <- TRUE
+MAX_CelEsT_equalweights[MAX_CelEsT_equalweights$source %in% FIMO1000$source, "with_motif"] <- FALSE
+MAX_CelEsT_equalweights[paste0(MAX_CelEsT_equalweights$source, "-", MAX_CelEsT_equalweights$target) %in% paste0(FIMO1000$source, "-", FIMO1000$target), "with_motif"] <- TRUE
 
 MAX_CelEsT_equalweights[, "in_ChIP"] <- NA
 MAX_CelEsT_equalweights[MAX_CelEsT_equalweights$source %in% ChIPorth500$source, "in_ChIP"] <- FALSE
@@ -550,11 +572,18 @@ MAX_CelEsT_equalweights[, "in_eY1H"] <- NA
 MAX_CelEsT_equalweights[MAX_CelEsT_equalweights$source %in% eY1H_net$source, "in_eY1H"] <- FALSE
 MAX_CelEsT_equalweights[paste0(MAX_CelEsT_equalweights$source, "-", MAX_CelEsT_equalweights$target) %in% paste0(eY1H_net$source, "-", eY1H_net$target), "in_eY1H"] <- TRUE
 
+MAX_CelEsT_equalweights[, "TF_WBgeneID"] <- fullsetTFS_BM_MOR[match(MAX_CelEsT_equalweights$source, fullsetTFS_BM_MOR$wormbase_gseq), "wormbase_gene"]
+
+MAX_CelEsT_equalweights[, "TF_name"] <- fullsetTFS_BM_MOR[match(MAX_CelEsT_equalweights$source, fullsetTFS_BM_MOR$wormbase_gseq), "wormbase_locus"]
+MAX_CelEsT_equalweights[MAX_CelEsT_equalweights$TF_name == "", "TF_name"] <- MAX_CelEsT_equalweights[MAX_CelEsT_equalweights$TF_name == "", "source"]
+
+MAX_CelEsT_equalweights[, "target_WBgeneID"] <- wormRef::Cel_genes[match(MAX_CelEsT_equalweights$target, wormRef::Cel_genes$sequence_name), "wb_id"]
+
+MAX_CelEsT_equalweights[, "target_name"] <- wormRef::Cel_genes[match(MAX_CelEsT_equalweights$target, wormRef::Cel_genes$sequence_name), "public_name"]
+
 write.table(MAX_CelEsT_equalweights,
             "output/MAX_CelEsT_annotated.txt",
             sep = "\t",
             col.names = TRUE,
             row.names = FALSE)
-
-
 

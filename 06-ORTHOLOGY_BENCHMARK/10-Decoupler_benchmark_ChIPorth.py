@@ -18,7 +18,7 @@ from pathlib import Path
 
 home_directory = os.path.expanduser("~")
 
-working_directory = os.path.join(home_directory, "Cel_GRN_manuscript")
+working_directory = os.path.join(home_directory, "Cel_GRN_revisions")
 
 os.chdir(working_directory)
 
@@ -74,7 +74,7 @@ cutoffs_vec = [100, 500, 1000, 1500, 2000, 2500, 3000, 5000, 10000]
 
 for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/ChIPorth_" + str(cutoff) + "_HOTexcl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/ChIPorth_" + str(cutoff) + "_HOTexcl.txt"
     
     thisGRN_dict = {}
     
@@ -124,7 +124,7 @@ for cutoff in cutoffs_vec:
 
 for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/ChIPorth_" + str(cutoff) + "_HOTincl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/ChIPorth_" + str(cutoff) + "_HOTincl.txt"
     
     thisGRN_dict = {}
     
@@ -150,7 +150,7 @@ for cutoff in cutoffs_vec:
 for cutoff in cutoffs_vec:
     
     
-    file_name = "output/GRNs/STREMECisBP_" + str(cutoff) + "_HOTexcl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/STREMECisBP_" + str(cutoff) + "_HOTexcl.txt"
         
     thisGRN_dict = {}
         
@@ -176,7 +176,7 @@ for cutoff in cutoffs_vec:
 
 for cutoff in cutoffs_vec:
     
-    file_name = "output/GRNs/STREMECisBP_" + str(cutoff) + "_HOTincl.txt"
+    file_name = "~/Cel_GRN_manuscript/output/GRNs/STREMECisBP_" + str(cutoff) + "_HOTincl.txt"
         
     thisGRN_dict = {}
         

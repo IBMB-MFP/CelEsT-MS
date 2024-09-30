@@ -10,8 +10,8 @@ options(scipen=10000)
 
 # here create new folder and set working directory within it
 
-dir.create("~/Cel_GRN_manuscript/")
-setwd("~/Cel_GRN_manuscript/")
+dir.create("~/Cel_GRN_revisions/")
+setwd("~/Cel_GRN_revisions/")
 
 # create subfolders for input, output and graphics
 
@@ -161,9 +161,11 @@ orthCelEsT_benchraptor_shufflestats_df[, "label"] <- orthCelEsT_benchraptor_shuf
 
 saveRDS(orthCelEsT_benchraptormethods_plot,
         "plotdata/orthCelEsT_benchraptormethods_plot.rds")
+# orthCelEsT_benchraptormethods_plot <- readRDS("plotdata/orthCelEsT_benchraptormethods_plot.rds")
 
 saveRDS(orthCelEsT_benchraptor_shufflestats_df,
         "plotdata/orthCelEsT_benchraptor_shufflestats_df.rds")
+# orthCelEsT_benchraptor_shufflestats_df <- readRDS("plotdata/orthCelEsT_benchraptor_shufflestats_df.rds")
 
 method_labels <- c("Consensus", "MLM", "ULM", "WSum")
 names(method_labels) <- c("consensus_estimate", "mlm_estimate", "ulm_estimate", "wsum_norm")
@@ -175,13 +177,17 @@ pdf("graphics/orthCelEsT_benchRAPToR_methodsplot.pdf",
 ggplot(data = orthCelEsT_benchraptormethods_plot[!orthCelEsT_benchraptormethods_plot$method %in% c("wsum_estimate", "wsum_corr") &
                                                orthCelEsT_benchraptormethods_plot$net != "orthCelEsT_unequal", ], aes(x = auroc, y = auprc, colour = as.factor(label))) + 
   geom_point(size = 2) +
-  geom_label_repel(aes(label = label),
+  geom_label_repel(aes(label = label,
+                       fill = label),
+                   colour = "black",
                    label.size = 0.1,
                    max.overlaps = 15,
                    box.padding = 0.3,
                    label.padding = 0.1,
                    point.padding = 0,
                    size = 2) +
+  scale_fill_manual(values = palette.colors(palette = "R4")[3:2]) +
+  scale_colour_manual(values = palette.colors(palette = "R4")[3:2]) +
   geom_vline(xintercept = 0.5,
              linetype = "dashed",
              col = "black") +
@@ -205,11 +211,11 @@ ggplot(data = orthCelEsT_benchraptormethods_plot[!orthCelEsT_benchraptormethods_
   geom_point(data = orthCelEsT_benchraptor_shufflestats_df[!orthCelEsT_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc), alpha = 0.5) + 
   geom_errorbar(data = orthCelEsT_benchraptor_shufflestats_df[!orthCelEsT_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                                                   ymin = (mean_auprc - sd_auprc),
-                                                                                                                                                  ymax = (mean_auprc + sd_auprc)), alpha = 0.5) +
+                                                                                                                                                  ymax = (mean_auprc + sd_auprc)), alpha = 0.5, width = 0.01) +
   geom_errorbar(data = orthCelEsT_benchraptor_shufflestats_df[!orthCelEsT_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                                                   xmin = (mean_auroc - sd_auroc),
                                                                                                                                                   xmax = (mean_auroc + sd_auroc),
-                                                                                                                                                  color = label), alpha = 0.5)
+                                                                                                                                                  color = label), alpha = 0.5, width = 0.01)
 
 dev.off()
 
@@ -221,13 +227,17 @@ ggplot(data = orthCelEsT_benchraptormethods_plot[!str_detect(orthCelEsT_benchrap
                                                orthCelEsT_benchraptormethods_plot$method == "mlm_estimate" &
                                                orthCelEsT_benchraptormethods_plot$net != "orthCelEsT_unequal", ], aes(x = auroc, y = auprc, colour = net)) + 
   geom_point(size = 2) +
-  geom_label_repel(aes(label = label),
+  geom_label_repel(aes(label = label,
+                       fill = net),
+                   colour = "black",
                    label.size = 0.1,
                    max.overlaps = 10,
                    box.padding = 0.2,
                    label.padding = 0.1,
                    point.padding = 0,
                    size = 3) +
+  scale_fill_manual(values = palette.colors(palette = "R4")[3:2]) +
+  scale_colour_manual(values = palette.colors(palette = "R4")[3:2]) +
   geom_vline(xintercept = 0.5,
              linetype = "dashed",
              col = "black") +
@@ -248,10 +258,10 @@ ggplot(data = orthCelEsT_benchraptormethods_plot[!str_detect(orthCelEsT_benchrap
   geom_point(data = orthCelEsT_benchraptor_shufflestats_df[orthCelEsT_benchraptor_shufflestats_df$method == "mlm_estimate", ], aes(x = mean_auroc, y = mean_auprc), alpha = 0.5) + 
   geom_errorbar(data = orthCelEsT_benchraptor_shufflestats_df[orthCelEsT_benchraptor_shufflestats_df$method == "mlm_estimate", ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                               ymin = (mean_auprc - sd_auprc),
-                                                                                                                              ymax = (mean_auprc + sd_auprc)), alpha = 0.5) +
+                                                                                                                              ymax = (mean_auprc + sd_auprc)), alpha = 0.5, width = 0.01) +
   geom_errorbar(data = orthCelEsT_benchraptor_shufflestats_df[orthCelEsT_benchraptor_shufflestats_df$method == "mlm_estimate", ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                               xmin = (mean_auroc - sd_auroc),
-                                                                                                                              xmax = (mean_auroc + sd_auroc)), alpha = 0.5)
+                                                                                                                              xmax = (mean_auroc + sd_auroc)), alpha = 0.5, width = 0.01)
 dev.off()
 
 #### maxCelEsT ####
@@ -309,13 +319,17 @@ pdf("graphics/maxCelEsT_benchRAPToR_methodsplot.pdf",
 ggplot(data = maxCelEsT_benchraptormethods_plot[!maxCelEsT_benchraptormethods_plot$method %in% c("wsum_estimate", "wsum_corr") &
                                                    maxCelEsT_benchraptormethods_plot$net != "maxCelEsT_unequal", ], aes(x = auroc, y = auprc, colour = as.factor(label))) + 
   geom_point(size = 2) +
-  geom_label_repel(aes(label = label),
+  geom_label_repel(aes(label = label,
+                       fill = label),
+                   colour = "black",
                    label.size = 0.1,
                    max.overlaps = 15,
                    box.padding = 0.3,
                    label.padding = 0.1,
                    point.padding = 0,
                    size = 2) +
+  scale_fill_manual(values = palette.colors(palette = "R4")[c(3,7)]) +
+  scale_colour_manual(values = palette.colors(palette = "R4")[c(3,7)]) +
   geom_vline(xintercept = 0.5,
              linetype = "dashed",
              col = "black") +
@@ -339,11 +353,13 @@ ggplot(data = maxCelEsT_benchraptormethods_plot[!maxCelEsT_benchraptormethods_pl
   geom_point(data = maxCelEsT_benchraptor_shufflestats_df[!maxCelEsT_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc), alpha = 0.5) + 
   geom_errorbar(data = maxCelEsT_benchraptor_shufflestats_df[!maxCelEsT_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                                                           ymin = (mean_auprc - sd_auprc),
-                                                                                                                                                          ymax = (mean_auprc + sd_auprc)), alpha = 0.5) +
+                                                                                                                                                          ymax = (mean_auprc + sd_auprc)), alpha = 0.5,
+                width = 0.01) +
   geom_errorbar(data = maxCelEsT_benchraptor_shufflestats_df[!maxCelEsT_benchraptor_shufflestats_df$method %in% c("wsum_estimate", "wsum_corr"), ], aes(x = mean_auroc, y = mean_auprc,
                                                                                                                                                           xmin = (mean_auroc - sd_auroc),
                                                                                                                                                           xmax = (mean_auroc + sd_auroc),
-                                                                                                                                                          color = label), alpha = 0.5)
+                                                                                                                                                          color = label), alpha = 0.5,
+                width = 0.01)
 
 dev.off()
 
