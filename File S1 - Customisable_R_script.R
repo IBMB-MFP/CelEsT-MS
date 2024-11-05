@@ -76,7 +76,6 @@ remove.duplicated.genes <- function(geneIDs){
 ## First specify the packages of interest
 
 packages <- c("stringr",
-              "biomaRt",
               "openxlsx",
               "edgeR",
               "splines")
@@ -147,8 +146,6 @@ gh_package.check <- lapply(
 )
 
 #### INPUT DATA ####
-
-parasite_mart <- useMart("parasite_mart", dataset = "wbps_gene", host = "https://parasite.wormbase.org", port = 443)
 
 # set path to Table S1 (TF annotations) from manuscript supplementary files
 TF_annotations <- read.xlsx("~/Downloads/Table S1 - TF annotation.xlsx",
@@ -416,6 +413,7 @@ row.names(DE_stats) <- Cel_genes[match(row.names(DE_stats), Cel_genes[, myGeneID
 # Here we perform the TF activity estimation with the multivariate linear model method (recommended)
 # To use other methods, change the argument to statistics or supply multiple methods as a vector (e.g. statistics = c("mlm", "ulm"))
 # Estimation can take a couple of minutes. mlm is the fastest method, other methods are considerably slower
+
 DEdata_decouple <- decoupleR::decouple(
   mat = DE_stats[, 1, drop = FALSE], 
   network = CelEsT_GRN,
