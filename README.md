@@ -5,6 +5,8 @@ The folders are numbered in order of execution, as are the scripts within each f
 
 I have done my best to ensure the code runs smooothly but as in the course of manuscript preparation the code was run interactively there may be some bugs when attempting to run the entire code as is - I apologise in advance.
 
+The scripts containing the code for the analyses and generation of figures in the manuscripts are listed in the file CODE_FOR_FIGURES.txt
+
 Any questions please raise an issue on this page.
 
 Note several analyses with CelEsT are available via the CelEsT R Shiny app found at [github.com/IBMB-MFP/CelEsT-app].
