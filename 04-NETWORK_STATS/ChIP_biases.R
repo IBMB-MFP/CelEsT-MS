@@ -218,6 +218,9 @@ motif_targets <- motif_targets[!is.na(motif_targets)]
 ChIP_targets <- CelEsT[CelEsT$in_ChIP, "target"]
 ChIP_targets <- ChIP_targets[!is.na(ChIP_targets)]
 
+eY1H_targets <- CelEsT[CelEsT$in_eY1H, "target"]
+eY1H_targets <- eY1H_targets[!is.na(eY1H_targets)]
+
 gini_df <- data.frame(gini = c(allGenes_tissuetype_Gini[wormRef::Cel_genes[match(ChIP_targets, Cel_genes$sequence_name), "wb_id"]],
                                allGenes_tissuetype_Gini[wormRef::Cel_genes[match(motif_targets, Cel_genes$sequence_name), "wb_id"]],
                                allGenes_tissuetype_Gini[wormRef::Cel_genes[match(eY1H_targets, Cel_genes$sequence_name), "wb_id"]],
