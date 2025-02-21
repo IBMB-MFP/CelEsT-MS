@@ -12,7 +12,7 @@ A **customisable script** (File S1 - Customisable_R_script.R) is provided with a
 
 Any questions please raise an issue on this page.
 
-**Note several analyses with *Cel*EsT are available via the *Cel*EsT R Shiny app found [here](github.com/IBMB-MFP/CelEsT-app).**
+**Note several analyses with *Cel*EsT are available via the *Cel*EsT R Shiny app found [here](https://github.com/IBMB-MFP/CelEsT-app).**
 
 Thanks for your interest in *Cel*EsT!
 
