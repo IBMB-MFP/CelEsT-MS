@@ -1,4 +1,5 @@
-# CelEsT
+# Analysis code for *Cel*EsT manuscript (Perez 2024, Genetics)
+
 This repository contains the code for the manuscript - *Cel*EsT: a unified gene regulatory network for estimating transcription factor activities in C. elegans. Perez 2024, Genetics [doi:10.1093/genetics/iyae189/7929675](https://academic.oup.com/genetics/advance-article/doi/10.1093/genetics/iyae189/7929675)
 
 The folders are numbered in order of execution, as are the scripts within each folder. This is important as each script may relay on outputs from previous scripts in order to function.
